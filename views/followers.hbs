@@ -1,0 +1,22 @@
+<main class="home-main">
+  <div class="assignments-hero">
+    <h1>{{user.name}}'s Followers</h1>
+
+    {{#if followers.length}}
+      <ul class="user-list">
+        {{#each followers}}
+          <li class="user-list-item">
+            <img src="/profile-picture/{{this._id}}" alt="{{this.username}}'s profile picture" class="user-avatar">
+            <div class="user-info">
+              <h3>{{this.name}}</h3>
+              <p>@{{this.username}}</p>
+              <a href="/users/{{this._id}}" class="btn">View Profile</a>
+            </div>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>This user has no followers yet.</p>
+    {{/if}}
+  </div>
+</main>

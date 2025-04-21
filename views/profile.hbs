@@ -8,8 +8,8 @@
       </div>
       <div class="follow-stats">
       <div class="follow-stats">
-        <p><a href="#" class="open-modal" data-type="followers">{{profileUser.followers.length}} Followers</a></p>
-        <p><a href="#" class="open-modal" data-type="following">{{profileUser.following.length}} Following</a></p>
+        <p><a href="/{{profileUser._id}}/followers">{{profileUser.followers.length}} Followers</a></p>
+        <p><a href="/{{profileUser._id}}/following">{{profileUser.following.length}} Following</a></p>
       </div>
       </div>
       {{#unless isOwnProfile}}

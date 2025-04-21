@@ -1,0 +1,22 @@
+<main class="home-main">
+  <div class="assignments-hero">
+    <h1>{{user.name}} is Following</h1>
+
+    {{#if following.length}}
+      <ul class="user-list">
+        {{#each following}}
+          <li class="user-list-item">
+            <img src="/profile-picture/{{this._id}}" alt="{{this.username}}'s profile picture" class="user-avatar">
+            <div class="user-info">
+              <h3>{{this.name}}</h3>
+              <p>@{{this.username}}</p>
+              <a href="/users/{{this._id}}" class="btn">View Profile</a>
+            </div>
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>This user isn't following anyone yet.</p>
+    {{/if}}
+  </div>
+</main>
