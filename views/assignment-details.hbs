@@ -1,0 +1,41 @@
+<main class="home-main">
+  <div class="hero">
+    {{#if isGuest}}
+      <div class="guest-warning">
+        <p>You are viewing sample data.
+          <a href="/login">Log in</a>
+          to view and customize your own assignments.</p>
+      </div>
+    {{/if}}
+    <h1>{{assignment.title}}</h1>
+    <p><strong>Description:</strong> {{assignment.description}}</p>
+    <p><strong>Class:</strong> {{assignment.class}}</p>
+    <p><strong>Due Date:</strong> {{formatDate assignment.dueDate}}</p>
+
+    {{#if assignment.file}}
+      <p><strong>File:</strong>
+        <a href="{{assignment.file}}" target="_blank">Download</a></p>
+    {{/if}}
+
+    {{#if user}}
+      <div class="actions">
+        <a href="/assignments/{{assignment._id}}/edit" class="btn">Edit</a>
+        <form id="delete-form" action="/assignments/{{assignment._id}}?_method=DELETE" method="POST" style="display:inline;">
+          <button type="button" id="open-delete-modal" class="btn btn-danger">Delete</button>
+        </form>
+
+        <div id="delete-modal" class="modal-overlay hidden">
+          <div class="modal-content">
+            <h2>Are you sure?</h2>
+            <p>This action cannot be undone.</p>
+            <div class="modal-actions">
+              <button id="confirm-delete" class="btn btn-danger">Yes, delete</button>
+              <button id="cancel-delete" class="btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+    {{/if}}
+  </div>
+</main>
+<script src="/javascripts/deleteConfirmation.js"></script>

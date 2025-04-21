@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{title}}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a href="/" class="site-title">
+        Assignment Tracker
+      </a>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/assignments">Assignments</a>
+          </li>
+          {{#if user}}
+            <li class="nav-item">
+              <a class="nav-link" href="/assignments/new">Add</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">Logout ({{user.username}})</a>
+            </li>
+          {{else}}
+            <li class="nav-item">
+              <a class="nav-link" href="/login">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/register">Register</a>
+            </li>
+          {{/if}}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-grow-1">
+    <div class="container py-4">
+      {{{body}}}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container text-center">
+      <p class="mb-0">&copy; {{year}} Assignment Tracker | Sebastian Bruce | COMP2068</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

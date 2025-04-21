@@ -1,0 +1,48 @@
+<main class="home-main">
+  <div class="assignments-hero">
+    <h1>Upcoming Assignments</h1>
+
+    {{#if isGuest}}
+      <div class="guest-warning">
+        <p>You have limited access. Please sign in 
+          <a href="/login">Log in</a> 
+          to engage with the community.</p>
+      </div>
+    {{/if}}
+
+    <form action="/assignments" method="GET" class="search-form">
+      <input type="text" name="search" placeholder="Search assignments" value="{{searchQuery}}" class="search-input"/>
+      <button type="submit" class="search-btn">Search</button>
+    </form>
+
+    <div class="sort-options">
+      <a href="/assignments?sortBy=dueDate" class="sort-link">Sort by Due Date</a> |
+      <a href="/assignments?sortBy=title" class="sort-link">Sort by Title</a> |
+      <a href="/assignments?sortBy=class" class="sort-link">Sort by Class</a>
+    </div>
+
+    {{#if user}}
+      <button
+        class="add-btn"
+        onclick="window.location.href='/assignments/new'">
+        Add Assignment
+      </button>
+    {{/if}}
+
+    <ul class="assignments-list">
+      {{#each assignments}}
+        <li class="assignment-item">
+          <a href="/assignments/{{this._id}}" class="assignment-link">
+            <h2>{{this.title}}</h2>
+            <p><strong>Due Date:</strong> {{formatDate this.dueDate}}</p>
+            <p><strong>Class:</strong> {{this.class}}</p>
+            {{#if this.file}}
+              <p><strong>File:</strong>
+                <a href="{{this.file}}" target="_blank">View Assignment</a></p>
+            {{/if}}
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</main>

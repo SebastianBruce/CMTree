@@ -1,0 +1,30 @@
+<main class="login-main">
+  <section class="login-container">
+    <h1>Login</h1>
+    <form action="/login" method="POST" class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" name="password" required placeholder="Enter your password">
+          <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
+
+
+      <div class="form-group">
+        <button type="submit" class="btn">Login</button>
+      </div>
+
+      <p class="register-link">Don't have an account? <a href="/register">Register</a></p>
+    </form>
+    {{#if error}}
+      <p class="error">{{error}}</p>
+    {{/if}}
+  </section>
+</main>
+<script src="/javascripts/showPassword.js"></script>

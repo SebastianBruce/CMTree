@@ -1,0 +1,30 @@
+<main class="home-main">
+  <div class="assignments-hero">
+    <h1>Add a New Assignment</h1>
+    <form action="/assignments" method="POST">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required placeholder="Enter assignment title">
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" placeholder="Describe the assignment"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="dueDate">Due Date</label>
+        <input type="date" id="dueDate" name="dueDate" required>
+      </div>
+      <div class="form-group">
+        <label for="class">Class</label>
+        <input type="text" id="class" name="class" placeholder="Enter class name">
+      </div>
+      <div class="form-group">
+        <label for="file">File URL (optional)</label>
+        <input type="text" id="file" name="file" placeholder="Enter file URL (if applicable)">
+      </div>
+      <div class="form-group">
+        <button type="submit" class="btn">Save Assignment</button>
+      </div>
+    </form>
+  </div>
+</main>
