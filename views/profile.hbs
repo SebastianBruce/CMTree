@@ -1,29 +1,30 @@
 <main class="home-main">
   <div class="profile-container">
     <section class="profile-header">
-      <img src="/profile-picture/{{profileUser._id}}" alt="Profile Picture" class="profile-img">
-      <div class="profile-info">
-        <h1 class="profile-name">{{profileUser.name}}</h1>
-        <p class="profile-username">@{{profileUser.username}}</p>
-      </div>
-      <div class="follow-stats">
-      <div class="follow-stats">
-        <p><a href="/{{profileUser._id}}/followers">{{profileUser.followers.length}} Followers</a></p>
-        <p><a href="/{{profileUser._id}}/following">{{profileUser.following.length}} Following</a></p>
-      </div>
-      </div>
       {{#unless isOwnProfile}}
-        <form method="POST" action="{{#if isFollowing}}/unfollow/{{profileUser._id}}{{else}}/follow/{{profileUser._id}}{{/if}}">
+        <form method="POST" action="{{#if isFollowing}}/unfollow/{{profileUser._id}}{{else}}/follow/{{profileUser._id}}{{/if}}" class="follow-form">
           <button class="btn" type="submit">
             {{#if isFollowing}}Unfollow{{else}}Follow{{/if}}
           </button>
         </form>
       {{/unless}}
+
       {{#if isOwnProfile}}
         <div class="edit-profile-btn">
-            <a href="/edit-profile" class="btn">Edit Your Profile</a>
+          <a href="/edit-profile" class="btn">Edit Your Profile</a>
         </div>
       {{/if}}
+
+      <img src="/profile-picture/{{profileUser._id}}" alt="Profile Picture" class="profile-img">
+
+      <div class="profile-info">
+        <h1 class="profile-name">{{profileUser.name}}</h1>
+        <p class="profile-username">@{{profileUser.username}}</p>
+        <div class="follow-stats">
+          <p><a href="/{{profileUser.username}}/followers">{{profileUser.followers.length}} Followers</a></p>
+          <p><a href="/{{profileUser.username}}/following">{{profileUser.following.length}} Following</a></p>
+        </div>
+      </div>
     </section>
 
     <section class="user-posts-section">

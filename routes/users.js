@@ -6,6 +6,7 @@ const User = require('../models/User');
 const Assignment = require("../models/Assignment");
 
 const upload = multer(); // For handling profile picture uploads
+const reserved = ['login', 'register', 'assignments', 'edit-profile', 'profile-picture', 'follow', 'unfollow', 'logout'];
 
 // Ensure the user is logged in
 function ensureAuthenticated(req, res, next) {
@@ -69,7 +70,7 @@ router.post('/edit-profile', ensureAuthenticated, upload.single('profilePicture'
       req.flash("info_msg", "No changes made.");
     }
 
-    res.redirect('/profile');
+    res.redirect(`/${user.username}`);
   } catch (err) {
     console.error(err);
     req.flash("error_msg", "An error occurred.");
@@ -77,7 +78,9 @@ router.post('/edit-profile', ensureAuthenticated, upload.single('profilePicture'
   }
 });
 
-router.get('/profile/:username', async (req, res) => {
+router.get('/:username', async (req, res, next) => {
+  if (reserved.includes(req.params.username)) return next();
+
   try {
     const user = await User.findOne({ username: req.params.username });
 
@@ -86,20 +89,17 @@ router.get('/profile/:username', async (req, res) => {
       return res.redirect("/");
     }
 
-    // Fetch the assignments for the user
     const assignments = await Assignment.find({ userId: user._id });
-    
     const isFollowing = req.isAuthenticated() &&
       user.followers.some(followerId => followerId.equals(req.user._id));
 
     res.render('profile', {
       title: `${user.username}'s Profile`,
       profileUser: user,
-      assignments: assignments,
+      assignments,
       isOwnProfile: req.isAuthenticated() && req.user.username === user.username,
-      isFollowing: isFollowing
+      isFollowing
     });
-
   } catch (err) {
     console.error(err);
     req.flash("error_msg", "Something went wrong.");
@@ -139,7 +139,7 @@ router.post('/follow/:userId', ensureAuthenticated, async (req, res) => {
       await userToFollow.save();
     }
 
-    res.redirect(`/profile/${userToFollow.username}`);
+    res.redirect(`/${userToFollow.username}`);
   } catch (err) {
     console.error(err);
     res.redirect('/');
@@ -162,11 +162,35 @@ router.post('/unfollow/:userId', ensureAuthenticated, async (req, res) => {
     await currentUser.save();
     await userToUnfollow.save();
 
-    res.redirect(`/profile/${userToUnfollow.username}`);
+    res.redirect(`/${userToUnfollow.username}`);
   } catch (err) {
     console.error(err);
     res.redirect('/');
   }
+});
+
+router.get('/:username/followers', async (req, res, next) => {
+  if (reserved.includes(req.params.username)) return next();
+
+  const user = await User.findOne({ username: req.params.username }).populate('followers');
+  if (!user) return res.redirect('/');
+
+  res.render('followers', {
+    user,
+    followers: user.followers
+  });
+});
+
+router.get('/:username/following', async (req, res, next) => {
+  if (reserved.includes(req.params.username)) return next();
+
+  const user = await User.findOne({ username: req.params.username }).populate('following');
+  if (!user) return res.redirect('/');
+
+  res.render('following', {
+    user,
+    following: user.following
+  });
 });
 
 module.exports = router;

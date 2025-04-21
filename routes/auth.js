@@ -79,7 +79,7 @@ router.post('/register', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Load default profile picture from filesystem
-    const defaultPicPath = path.join(__dirname, '../public/images/default-pfp.png');
+    const defaultPicPath = path.join(__dirname, '../public/images/default-pfp.jpg');
     const defaultPicBuffer = fs.readFileSync(defaultPicPath);
 
     // Create user with default profile picture

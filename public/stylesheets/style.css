@@ -567,15 +567,36 @@ body {
 }
 
 .profile-header {
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
-  margin-bottom: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.follow-form,
+.edit-profile-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.profile-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .profile-img {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid #ffffff;
@@ -584,16 +605,35 @@ body {
 .profile-info {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  color: #ffffff;
 }
 
 .profile-name {
   font-size: 2rem;
-  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .profile-username {
   font-size: 1.2rem;
-  color: #cccccc;
+  color: #d4d4d4;
+  margin-bottom: 15px;
+}
+
+.follow-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 1rem;
+  margin-bottom: 15px;
+}
+
+.follow-stats a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.follow-stats a:hover {
+  text-decoration: underline;
 }
 
 .user-posts-section {
@@ -683,6 +723,8 @@ body {
   margin-top: 8px;
   display: inline-block;
 }
+
+
 
 @media (max-width: 600px) {
   .assignments-hero {
