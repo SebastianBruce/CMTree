@@ -8,9 +8,6 @@ const EXAMPLE_USER_ID = new mongoose.Types.ObjectId("67f9a990b64a6366c1f78774");
 //List assignments
 router.get("/assignments", async (req, res) => {
   try {
-    const rawUserId = req.user ? req.user._id : EXAMPLE_USER_ID;
-    const userId = new mongoose.Types.ObjectId(rawUserId);
-
     const sortBy = req.query.sortBy || 'dueDate';
     const searchQuery = req.query.search || '';
 
@@ -19,7 +16,7 @@ router.get("/assignments", async (req, res) => {
     else if (sortBy === 'title') sortOption = { title: 1 };
     else sortOption = { dueDate: 1 };
 
-    let searchFilter = { userId };
+    let searchFilter = {};
     if (searchQuery) {
       const regex = new RegExp(searchQuery, "i");
       searchFilter.$or = [
@@ -28,6 +25,7 @@ router.get("/assignments", async (req, res) => {
       ];
     }
 
+    // Fetch all assignments with optional sorting and search
     const assignments = await Assignment.find(searchFilter).sort(sortOption);
 
     res.render("assignments", {
@@ -37,7 +35,6 @@ router.get("/assignments", async (req, res) => {
       isGuest: !req.user,
     });
   } catch (err) {
-    console.error("Error loading assignments:", err);
     res.status(500).send("Server Error");
   }
 });
@@ -74,7 +71,6 @@ router.post("/assignments", async (req, res) => {
     req.flash("success_msg", "Assignment added successfully!");
     res.redirect("/assignments");
   } catch (err) {
-    console.error("Error adding assignment:", err);
     req.flash("error_msg", "Error adding assignment. Please try again.");
     res.redirect("/assignments/new");
   }
@@ -99,7 +95,6 @@ router.get("/assignments/:id", async (req, res) => {
       isGuest: !req.user,
     });
   } catch (err) {
-    console.error("Error loading assignment:", err);
     req.flash("error_msg", "Could not load assignment.");
     res.redirect("/assignments");
   }
@@ -127,7 +122,6 @@ router.get("/assignments/:id/edit", async (req, res) => {
       formattedDueDate,
     });
   } catch (err) {
-    console.error("Error loading assignment for edit:", err);
     req.flash("error_msg", "Could not load assignment for editing.");
     res.redirect("/assignments");
   }
@@ -158,7 +152,6 @@ router.put("/assignments/:id", async (req, res) => {
     req.flash("success_msg", "Assignment updated successfully!");
     res.redirect(`/assignments/${assignment._id}`);
   } catch (err) {
-    console.error("Error updating assignment:", err);
     req.flash("error_msg", "Error updating assignment. Please try again.");
     res.redirect(`/assignments/${req.params.id}/edit`);
   }
@@ -183,7 +176,6 @@ router.delete("/assignments/:id", async (req, res) => {
     req.flash("success_msg", "Assignment deleted successfully!");
     res.redirect("/assignments");
   } catch (err) {
-    console.error("Error deleting assignment:", err);
     req.flash("error_msg", "Error deleting assignment. Please try again.");
     res.redirect("/assignments");
   }

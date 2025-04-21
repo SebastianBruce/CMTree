@@ -3,6 +3,10 @@ const express = require('express');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
+const fs = require('fs');
+const path = require('path');
+const multer = require('multer');
+const upload = multer();
 const User = require('../models/User');
 
 //If a user logged in, redirect them to assignments page
@@ -35,7 +39,7 @@ router.post('/register', async (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
   let errors = [];
 
-  //Basic validation
+  // Basic validation
   if (!username || !email || !password || !confirmPassword) {
     errors.push('Please fill in all fields.');
   }
@@ -47,11 +51,11 @@ router.post('/register', async (req, res) => {
   if (password.length < 8) {
     errors.push('Password must be at least 8 characters.');
   }
-  
+
   if (!/[A-Z]/.test(password)) {
     errors.push('Password must contain at least one uppercase letter.');
   }
-  
+
   if (!/\d/.test(password)) {
     errors.push('Password must contain at least one number.');
   }
@@ -63,7 +67,7 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    //Check if username or email is already taken
+    // Check if username or email is already taken
     const existingUser = await User.findOne({ $or: [{ email }, { username: username }] });
     if (existingUser) {
       return res.render('register', {
@@ -71,21 +75,46 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    //Hash password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //Create and save new user
+    // Load default profile picture from filesystem
+    const defaultPicPath = path.join(__dirname, '../public/images/default-pfp.png');
+    const defaultPicBuffer = fs.readFileSync(defaultPicPath);
+
+    // Create user with default profile picture
     const newUser = new User({
       name: 'CMTree User',
       username,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      profilePicture: defaultPicBuffer
     });
 
+    // Find the user to automatically follow (e.g., by username or userId)
+    const userToFollow = await User.findOne({ username: 'seb' });
+
+    if (userToFollow) {
+      // Add the new user to the following list of the predefined user
+      userToFollow.followers.push(newUser._id);
+      await userToFollow.save();
+
+      // Add the predefined user to the following list of the new user
+      newUser.following.push(userToFollow._id);
+    }
+
+    // Save the new user
     await newUser.save();
 
-    req.flash('success_msg', 'You are now registered. Please log in.');
-    res.redirect('/login');
+    req.login(newUser, function(err) {
+      if (err) {
+        console.error(err);
+        return res.render('register', {
+          error: 'Registration succeeded but login failed. Please try logging in manually.'
+        });
+      }
+      return res.redirect('/edit-profile');
+    });
 
   } catch (err) {
     console.error(err);

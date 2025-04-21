@@ -1,0 +1,48 @@
+<main class="home-main">
+  <div class="profile-container">
+    <section class="profile-header">
+      <img src="/profile-picture/{{profileUser._id}}" alt="Profile Picture" class="profile-img">
+      <div class="profile-info">
+        <h1 class="profile-name">{{profileUser.name}}</h1>
+        <p class="profile-username">@{{profileUser.username}}</p>
+      </div>
+      <div class="follow-stats">
+      <div class="follow-stats">
+        <p><a href="#" class="open-modal" data-type="followers">{{profileUser.followers.length}} Followers</a></p>
+        <p><a href="#" class="open-modal" data-type="following">{{profileUser.following.length}} Following</a></p>
+      </div>
+      </div>
+      {{#unless isOwnProfile}}
+        <form method="POST" action="{{#if isFollowing}}/unfollow/{{profileUser._id}}{{else}}/follow/{{profileUser._id}}{{/if}}">
+          <button class="btn" type="submit">
+            {{#if isFollowing}}Unfollow{{else}}Follow{{/if}}
+          </button>
+        </form>
+      {{/unless}}
+      {{#if isOwnProfile}}
+        <div class="edit-profile-btn">
+            <a href="/edit-profile" class="btn">Edit Your Profile</a>
+        </div>
+      {{/if}}
+    </section>
+
+    <section class="user-posts-section">
+      <h2 class="section-title">Posts</h2>
+
+      {{#if assignments.length}}
+        <ul class="posts-list">
+          {{#each assignments}}
+            <li class="post-item">
+              <a href="/assignments/{{this._id}}" class="post-link">
+                <h3>{{this.title}}</h3>
+                <p>{{this.description}}</p>
+              </a>
+            </li>
+          {{/each}}
+        </ul>
+      {{else}}
+        <p class="no-posts">This user hasn't made any posts yet.</p>
+      {{/if}}
+    </section>
+  </div>
+</main>

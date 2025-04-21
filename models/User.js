@@ -1,18 +1,21 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
-//Define the User schema
+// Define the User schema
 const UserSchema = new mongoose.Schema({
   name: { type: String, default: 'CMTree User' },
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  profilePicture: { type: Buffer },
+  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
-//Compare input with stored password
+// Compare input with stored password
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-//Export the User model
+// Export the User model
 module.exports = mongoose.model("User", UserSchema);

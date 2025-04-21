@@ -1,0 +1,39 @@
+<main class="home-main">
+  <div class="assignments-hero">
+    <h1>Edit Profile</h1>
+    <form action="/edit-profile" method="POST" enctype="multipart/form-data">
+      <!-- Name Field -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" value="{{user.name}}" required placeholder="Enter your full name">
+      </div>
+
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" value="{{user.username}}" required placeholder="Enter your username">
+      </div>
+
+      <!-- Profile Picture Field -->
+      <div class="form-group">
+        <label for="profilePicture">Profile Picture</label>
+        <input type="file" id="profilePicture" name="profilePicture">
+        <small class="input-help">Upload a new profile picture (optional)</small>
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" name="password" placeholder="Enter a new password (leave empty to keep current)">
+          <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="edit-btn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</main>
+<script src="/javascripts/showPassword.js"></script>
