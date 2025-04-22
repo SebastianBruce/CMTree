@@ -6,10 +6,12 @@ const Assignment = require("../models/Assignment");
 const EXAMPLE_USER_ID = new mongoose.Types.ObjectId("67f9a990b64a6366c1f78774");
 
 //List assignments
+// routes/assignments.js
 router.get("/assignments", async (req, res) => {
   try {
     const sortBy = req.query.sortBy || 'dueDate';
     const searchQuery = req.query.search || '';
+    const filter = req.query.filter || (req.user ? req.user.filterPreference : 'all'); // Use saved filterPreference if user is logged in
 
     let sortOption = {};
     if (sortBy === 'class') sortOption = { class: 1 };
@@ -25,16 +27,27 @@ router.get("/assignments", async (req, res) => {
       ];
     }
 
-    // Fetch all assignments with optional sorting and search
-    const assignments = await Assignment.find(searchFilter).sort(sortOption);
+    // Handle filtering by following
+    if (filter === 'following' && req.user) {
+      const currentUser = await mongoose.model('User').findById(req.user._id);
+      const followingIds = currentUser.following || [];
+      searchFilter.userId = { $in: followingIds };
+    }
+
+    // Fetch assignments and populate the associated user data (username and profile picture)
+    const assignments = await Assignment.find(searchFilter)
+      .sort(sortOption)
+      .populate('userId', 'username profilePicture'); // Populate with username and profile picture
 
     res.render("assignments", {
       assignments,
       searchQuery,
       sortBy,
+      filter,
       isGuest: !req.user,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).send("Server Error");
   }
 });
@@ -82,11 +95,6 @@ router.get("/assignments/:id", async (req, res) => {
     const assignment = await Assignment.findById(req.params.id);
     if (!assignment) {
       req.flash("error_msg", "Assignment not found.");
-      return res.redirect("/assignments");
-    }
-
-    if (!req.user && !assignment.userId.equals(EXAMPLE_USER_ID) || req.user && !assignment.userId.equals(req.user._id)) {
-      req.flash("error_msg", "Unauthorized access.");
       return res.redirect("/assignments");
     }
 
@@ -178,6 +186,50 @@ router.delete("/assignments/:id", async (req, res) => {
   } catch (err) {
     req.flash("error_msg", "Error deleting assignment. Please try again.");
     res.redirect("/assignments");
+  }
+});
+
+// Update user's filter preference
+router.get("/assignments/set-filter/:filter", async (req, res) => {
+  if (!req.user) {
+    return res.redirect("/login");
+  }
+
+  const { filter } = req.params;
+  if (filter !== 'all' && filter !== 'following') {
+    return res.status(400).send("Invalid filter option.");
+  }
+
+  try {
+    const user = await mongoose.model('User').findById(req.user._id);
+    user.filterPreference = filter; // Update filter preference
+    await user.save();
+    res.redirect("/assignments");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.get("/assignments/data", async (req, res) => {
+  try {
+    const filter = req.query.filter || (req.user ? req.user.filterPreference : 'all');
+
+    let searchFilter = {};
+    if (filter === 'following' && req.user) {
+      const currentUser = await mongoose.model('User').findById(req.user._id);
+      const followingIds = currentUser.following || [];
+      searchFilter.userId = { $in: followingIds };
+    }
+
+    const assignments = await Assignment.find(searchFilter)
+      .sort({ dueDate: 1 })
+      .populate('userId', 'username profilePicture');
+
+    res.json(assignments);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

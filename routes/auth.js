@@ -85,10 +85,10 @@ router.post('/register', async (req, res) => {
     // Create user with default profile picture
     const newUser = new User({
       name: 'CMTree User',
-      username,
+      username: username.toLowerCase(),
       email,
       password: hashedPassword,
-      profilePicture: defaultPicBuffer
+      profilePicture: defaultPicBuffer,
     });
 
     // Find the user to automatically follow (e.g., by username or userId)

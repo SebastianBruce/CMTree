@@ -8,8 +8,11 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   profilePicture: { type: Buffer },
+  bio: { type: String },
+  link: { type: String },
   followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+  following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  filterPreference: { type: String, enum: ['all', 'following'], default: 'all' }
 });
 
 // Compare input with stored password

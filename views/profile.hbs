@@ -20,10 +20,16 @@
       <div class="profile-info">
         <h1 class="profile-name">{{profileUser.name}}</h1>
         <p class="profile-username">@{{profileUser.username}}</p>
+        {{#if profileUser.bio}}
+          <p class="profile-bio">{{profileUser.bio}}</p>
+        {{/if}}
         <div class="follow-stats">
-          <p><a href="/{{profileUser.username}}/followers">{{profileUser.followers.length}} Followers</a></p>
-          <p><a href="/{{profileUser.username}}/following">{{profileUser.following.length}} Following</a></p>
+          <p><strong><a href="/{{profileUser.username}}/followers">{{profileUser.followers.length}} Followers</a></strong></p>
+          <p><strong><a href="/{{profileUser.username}}/following">{{profileUser.following.length}} Following</a></strong></p>
         </div>
+        {{#if profileUser.link}}
+          <a href="{{profileUser.link}}">{{profileUser.link}}</a>
+        {{/if}}
       </div>
     </section>
 

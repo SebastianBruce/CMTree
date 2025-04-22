@@ -29,26 +29,71 @@ router.get('/edit-profile', ensureAuthenticated, (req, res) => {
   res.render('edit-profile', { title: 'Edit Profile' });
 });
 
+function isValidURL(str) {
+  try {
+    new URL(str);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 // Edit profile POST
 router.post('/edit-profile', ensureAuthenticated, upload.single('profilePicture'), async (req, res) => {
+  let errors = [];
+  const { name, username, bio, link, password } = req.body;
+
   try {
     const user = await User.findById(req.user._id);
+
+    if (username && username !== user.username) {
+      const existing = await User.findOne({ username });
+      if (existing && existing._id.toString() !== user._id.toString()) {
+        errors.push("Username already taken.");
+      }
+    }
+
+    if (link && !isValidURL(link)) {
+      errors.push("Invalid link format.");
+    }
+
+    if (password && password.length > 0) {
+      if (password.length < 8) {
+        errors.push("Password must be at least 8 characters.");
+      }
+      if (!/[A-Z]/.test(password)) {
+        errors.push("Password must contain at least one uppercase letter.");
+      }
+      if (!/\d/.test(password)) {
+        errors.push("Password must contain at least one number.");
+      }
+    }
+
+    if (errors.length > 0) {
+      return res.render('edit-profile', {
+        error: errors.join(' ')
+      });
+    }
+
     let updated = false;
 
-    const { name, username, password } = req.body;
-
-    if (name && name !== user.name) {
+    if (name !== user.name) {
       user.name = name;
       updated = true;
     }
 
     if (username && username !== user.username) {
-      const existing = await User.findOne({ username });
-      if (existing && existing._id.toString() !== user._id.toString()) {
-        req.flash("error_msg", "Username already taken.");
-        return res.redirect("/edit-profile");
-      }
-      user.username = username;
+      user.username = username.toLowerCase();
+      updated = true;
+    }
+
+    if (bio !== user.bio) {
+      user.bio = bio;
+      updated = true;
+    }
+
+    if (link !== user.link) {
+      user.link = link;
       updated = true;
     }
 
@@ -73,8 +118,10 @@ router.post('/edit-profile', ensureAuthenticated, upload.single('profilePicture'
     res.redirect(`/${user.username}`);
   } catch (err) {
     console.error(err);
-    req.flash("error_msg", "An error occurred.");
-    res.redirect('/edit-profile');
+    res.render('edit-profile', {
+      title: 'Edit Profile',
+      error: 'An unexpected error occurred. Please try again.'
+    });
   }
 });
 

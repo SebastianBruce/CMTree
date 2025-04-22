@@ -1,6 +1,6 @@
 <main class="home-main">
   <div class="assignments-hero">
-
+    <!-- Guest Warning Section -->
     {{#if isGuest}}
       <div class="guest-warning">
         <p>You have limited access. Please sign in 
@@ -10,31 +10,45 @@
     {{/if}}
 
     <div class="sort-options">
-      <a href="/assignments?sortBy=dueDate" class="sort-link">Sort by Due Date</a> |
-      <a href="/assignments?sortBy=title" class="sort-link">Sort by Title</a> |
-      <a href="/assignments?sortBy=class" class="sort-link">Sort by Class</a>
+      <a href="/assignments/set-filter/all" class="sort-tab {{#ifEquals filter 'all'}}active{{/ifEquals}}">All</a>
+      {{#if user}}
+        <div class="tab-divider"></div>
+        <a href="/assignments/set-filter/following" class="sort-tab {{#ifEquals filter 'following'}}active{{/ifEquals}}">Following</a>
+      {{else}}
+        <div class="tab-divider"></div>
+        <a href="/login" class="sort-tab inactive">Following</a>
+      {{/if}}
     </div>
 
+
+    <!-- Add Button for Users -->
     {{#if user}}
-      <button
-        class="add-btn"
-        onclick="window.location.href='/assignments/new'">
+      <button class="add-btn" onclick="window.location.href='/assignments/new'">
         Add Assignment
       </button>
     {{/if}}
 
+    <!-- Assignments List -->
     <ul class="assignments-list">
       {{#each assignments}}
-        <li class="assignment-item">
-          <a href="/assignments/{{this._id}}" class="assignment-link">
+        <li class="assignment-item" onclick="window.location.href='/assignments/{{this._id}}'">
+          <div class="assignment-content">
+
+            <!-- Profile section (stops event and redirects to profile) -->
+            <div class="user-info">
+              <a href="/{{this.userId.username}}" class="profile-link">
+              <img src="/profile-picture/{{this.userId._id}}" alt="{{this.userId.username}}'s profile picture" class="profile-pic">
+              </a>
+              <a href="/{{this.userId.username}}" class="profile-link">
+              <p class="username">@{{this.userId.username}}</p>
+              </a>
+            </div>
+
+            <!-- Assignment content -->
             <h2>{{this.title}}</h2>
-            <p><strong>Due Date:</strong> {{formatDate this.dueDate}}</p>
-            <p><strong>Class:</strong> {{this.class}}</p>
-            {{#if this.file}}
-              <p><strong>File:</strong>
-                <a href="{{this.file}}" target="_blank">View Assignment</a></p>
-            {{/if}}
-          </a>
+            <p>{{this.description}}</p>
+
+          </div>
         </li>
       {{/each}}
     </ul>

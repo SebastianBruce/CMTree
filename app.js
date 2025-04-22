@@ -47,6 +47,11 @@ hbs.registerHelper('formatDate', function(date) {
   });
 });
 
+// In your app.js or wherever you set up Handlebars
+hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
+  return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+});
+
 //Configure the view engine and views folder
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');

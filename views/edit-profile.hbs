@@ -5,7 +5,7 @@
       <!-- Name Field -->
       <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" value="{{user.name}}" required placeholder="Enter your full name">
+        <input type="text" id="name" name="name" value="{{user.name}}" placeholder="Enter a name">
       </div>
 
       <!-- Username Field -->
@@ -21,6 +21,18 @@
         <small class="input-help">Upload a new profile picture (optional)</small>
       </div>
 
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="bio">Bio</label>
+        <input type="text" id="bio" name="bio" value="{{user.bio}}" placeholder="Say something about yourself...">
+      </div>
+
+      <!-- Username Field -->
+      <div class="form-group">
+        <label for="link">Link</label>
+        <input type="text" id="link" name="link" value="{{user.link}}" placeholder="Add a URL">
+      </div>
+
       <!-- Password Field -->
       <div class="form-group">
         <label for="password">Password</label>
@@ -34,6 +46,9 @@
         <button type="submit" class="edit-btn">Save Changes</button>
       </div>
     </form>
+    {{#if error}}
+      <p class="error">{{error}}</p>
+    {{/if}}
   </div>
 </main>
 <script src="/javascripts/showPassword.js"></script>
