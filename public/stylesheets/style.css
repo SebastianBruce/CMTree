@@ -763,6 +763,7 @@ body {
 
 .post-item:hover {
   background-color: rgba(255, 255, 255, 0.15);
+  cursor: pointer;
 }
 
 .post-link {
@@ -825,7 +826,78 @@ body {
   display: inline-block;
 }
 
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: black;
+  font-size: 1rem;
+  transition: transform 0.2s ease;
+}
 
+.like-btn:hover {
+  transform: scale(1.1);
+}
+
+.like-btn.liked {
+  font-weight: bold;
+}
+
+/* Notification styles */
+.unread-notification {
+  background-color: #fff8dc; /* light gold / cornsilk */
+  border-left: 5px solid gold;
+}
+
+.notification-text {
+  margin-top: 10px;
+}
+
+.notification-text strong:hover {
+  text-decoration: underline;
+}
+
+.profile-wrapper-link {
+  color: black;
+  text-decoration: none;
+}
+
+.notification-link {
+  color: #ffc107;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.notification-link:hover {
+  color: #fff;
+}
+
+.post-preview {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.post-preview:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.assignment-item.unread {
+  background-color: #fff4b3; /* Yellowish/goldish color */
+}
+
+.assignment-item.read {
+  background-color: #ffffff; /* Default background color when read */
+  opacity: 0.6; /* Optional: make read notifications less prominent */
+}
 
 @media (max-width: 600px) {
   .assignments-hero {

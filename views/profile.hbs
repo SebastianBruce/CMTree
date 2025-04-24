@@ -28,7 +28,7 @@
           <p><strong><a href="/{{profileUser.username}}/following">{{profileUser.following.length}} Following</a></strong></p>
         </div>
         {{#if profileUser.link}}
-          <a href="{{profileUser.link}}">{{profileUser.link}}</a>
+          <a href="{{profileUser.link}}" target="_blank">{{profileUser.link}}</a>
         {{/if}}
       </div>
     </section>
@@ -39,11 +39,14 @@
       {{#if assignments.length}}
         <ul class="posts-list">
           {{#each assignments}}
-            <li class="post-item">
-              <a href="/assignments/{{this._id}}" class="post-link">
-                <h3>{{this.title}}</h3>
-                <p>{{this.description}}</p>
-              </a>
+            <li class="post-item" onclick="window.location.href='/assignments/{{this._id}}'">
+              <h3>{{this.title}}</h3>
+              <p>{{this.description}}</p>
+              <div class="like-section">
+                <button class="like-btn" data-id="{{this._id}}">
+                    {{#if likedByUser}}❤️{{else}}🤍{{/if}} <span class="like-count">{{this.likes.length}}</span>
+                </button>
+              </div>
             </li>
           {{/each}}
         </ul>
@@ -53,3 +56,4 @@
     </section>
   </div>
 </main>
+<script src="/javascripts/updateLike.js"></script>

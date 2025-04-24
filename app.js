@@ -68,8 +68,10 @@ app.use(methodOverride('_method'));
 //Import and set up routes
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const notificationRoutes = require("./routes/notifications");
 app.use('/', usersRouter);
 app.use('/', authRouter);
+app.use("/", notificationRoutes);
 
 //Define routes for rendering pages
 app.get('/', (req, res) => res.render('index'));

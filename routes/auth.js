@@ -8,6 +8,7 @@ const path = require('path');
 const multer = require('multer');
 const upload = multer();
 const User = require('../models/User');
+const Notification = require("../models/Notification");
 
 //If a user logged in, redirect them to assignments page
 function redirectIfAuthenticated(req, res, next) {
@@ -101,6 +102,13 @@ router.post('/register', async (req, res) => {
 
       // Add the predefined user to the following list of the new user
       newUser.following.push(userToFollow._id);
+
+      // Create a follow notification
+      await Notification.create({
+        recipient: userToFollow._id,
+        sender: newUser._id,
+        type: 'follow'
+      });
     }
 
     // Save the new user

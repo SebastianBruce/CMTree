@@ -2,11 +2,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = express.Router();
 const Assignment = require("../models/Assignment");
-
-const EXAMPLE_USER_ID = new mongoose.Types.ObjectId("67f9a990b64a6366c1f78774");
+const Notification = require("../models/Notification");
 
 //List assignments
-// routes/assignments.js
 router.get("/assignments", async (req, res) => {
   try {
     const sortBy = req.query.sortBy || 'dueDate';
@@ -36,11 +34,22 @@ router.get("/assignments", async (req, res) => {
 
     // Fetch assignments and populate the associated user data (username and profile picture)
     const assignments = await Assignment.find(searchFilter)
-      .sort(sortOption)
-      .populate('userId', 'username profilePicture'); // Populate with username and profile picture
-
+    .sort(sortOption)
+    .populate('userId', 'username profilePicture');
+  
+    const userId = req.user ? req.user._id.toString() : null;
+    
+    // Add likedByUser to each assignment
+    const assignmentsWithLikeStatus = assignments.map(a => {
+      const likedByUser = userId ? a.likes.map(id => id.toString()).includes(userId) : false;
+      return {
+        ...a.toObject(),
+        likedByUser
+      };
+    });
+    
     res.render("assignments", {
-      assignments,
+      assignments: assignmentsWithLikeStatus,
       searchQuery,
       sortBy,
       filter,
@@ -230,6 +239,64 @@ router.get("/assignments/data", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Toggle like on an assignment
+router.post("/assignments/:id/like", async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: "Not authenticated" });
+
+  try {
+    const assignment = await Assignment.findById(req.params.id);
+    if (!assignment) return res.status(404).json({ error: "Assignment not found" });
+
+    const userId = req.user._id;
+    const index = assignment.likes.indexOf(userId);
+
+    if (index === -1) {
+      // Not yet liked — add
+      assignment.likes.push(userId);
+
+      // Create a like notification (if not liking own post)
+      if (!assignment.userId.equals(userId)) {
+        // Remove old notification if it exists
+        await Notification.findOneAndDelete({
+          recipient: assignment.userId,
+          sender: userId,
+          type: 'like',
+          assignment: assignment._id
+        });
+
+        // Create new notification
+        await Notification.create({
+          recipient: assignment.userId,
+          sender: userId,
+          type: 'like',
+          assignment: assignment._id
+        });
+
+        // Emit real-time event using Socket.IO
+        const io = req.app.get('io');
+        io.to(assignment.userId._id.toString()).emit('new-notification');
+      }
+    } else {
+      // Already liked — remove
+      assignment.likes.splice(index, 1);
+
+      // Remove the existing like notification
+      await Notification.findOneAndDelete({
+        recipient: assignment.userId,
+        sender: userId,
+        type: 'like',
+        assignment: assignment._id
+      });
+    }
+
+    await assignment.save();
+    res.json({ likesCount: assignment.likes.length, liked: index === -1 });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
   }
 });
 

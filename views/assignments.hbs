@@ -10,10 +10,10 @@
     {{/if}}
 
     <div class="sort-options">
-      <a href="/assignments/set-filter/all" class="sort-tab {{#ifEquals filter 'all'}}active{{/ifEquals}}">All</a>
+      <a href="/assignments/set-filter/all" class="sort-tab {{#ifEquals filter 'all'}}active{{/ifEquals}}" title="View all posts.">All</a>
       {{#if user}}
         <div class="tab-divider"></div>
-        <a href="/assignments/set-filter/following" class="sort-tab {{#ifEquals filter 'following'}}active{{/ifEquals}}">Following</a>
+        <a href="/assignments/set-filter/following" class="sort-tab {{#ifEquals filter 'following'}}active{{/ifEquals}}" title="View posts from people you follow.">Following</a>
       {{else}}
         <div class="tab-divider"></div>
         <a href="/login" class="sort-tab inactive">Following</a>
@@ -47,10 +47,15 @@
             <!-- Assignment content -->
             <h2>{{this.title}}</h2>
             <p>{{this.description}}</p>
-
+            <div class="like-section">
+              <button class="like-btn" data-id="{{this._id}}">
+                  {{#if likedByUser}}❤️{{else}}🤍{{/if}} <span class="like-count">{{this.likes.length}}</span>
+              </button>
+            </div>
           </div>
         </li>
       {{/each}}
     </ul>
   </div>
 </main>
+<script src="/javascripts/updateLike.js"></script>

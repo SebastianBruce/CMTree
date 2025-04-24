@@ -19,7 +19,25 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+const io = new Server(server);
+
+// Attach Socket.IO to app so you can access it elsewhere
+app.set('io', io);
+
+// Set up your Socket.IO events
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('join', (userId) => {
+    socket.join(userId); // Join a room based on user ID
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected');
+  });
+});
 
 /**
  * Listen on provided port, on all network interfaces.

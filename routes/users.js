@@ -4,9 +4,10 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const User = require('../models/User');
 const Assignment = require("../models/Assignment");
+const Notification = require("../models/Notification");
 
 const upload = multer(); // For handling profile picture uploads
-const reserved = ['login', 'register', 'assignments', 'edit-profile', 'profile-picture', 'follow', 'unfollow', 'logout'];
+const reserved = ['login', 'register', 'assignments', 'edit-profile', 'profile-picture', 'follow', 'unfollow', 'logout', 'notifications'];
 
 // Ensure the user is logged in
 function ensureAuthenticated(req, res, next) {
@@ -140,10 +141,20 @@ router.get('/:username', async (req, res, next) => {
     const isFollowing = req.isAuthenticated() &&
       user.followers.some(followerId => followerId.equals(req.user._id));
 
+    const userId = req.user ? req.user._id.toString() : null;
+
+    const assignmentsWithLikeStatus = assignments.map(a => {
+      const likedByUser = userId ? a.likes.map(id => id.toString()).includes(userId) : false;
+      return {
+        ...a.toObject(),
+        likedByUser,
+      };
+    });
+
     res.render('profile', {
       title: `${user.username}'s Profile`,
       profileUser: user,
-      assignments,
+      assignments: assignmentsWithLikeStatus,
       isOwnProfile: req.isAuthenticated() && req.user.username === user.username,
       isFollowing
     });
@@ -182,8 +193,27 @@ router.post('/follow/:userId', ensureAuthenticated, async (req, res) => {
     if (!currentUser.following.includes(userToFollow._id)) {
       currentUser.following.push(userToFollow._id);
       userToFollow.followers.push(currentUser._id);
+
+      // Delete the previous follow notification (if any)
+      await Notification.findOneAndDelete({
+        recipient: userToFollow._id,
+        sender: currentUser._id,
+        type: 'follow'
+      });
+
+      // Create a follow notification
+      await Notification.create({
+        recipient: userToFollow._id,
+        sender: currentUser._id,
+        type: 'follow'
+      });
+
       await currentUser.save();
       await userToFollow.save();
+
+      // Emit real-time event using Socket.IO
+      const io = req.app.get('io');
+      io.to(userToFollow._id.toString()).emit('new-notification');
     }
 
     res.redirect(`/${userToFollow.username}`);
@@ -205,6 +235,13 @@ router.post('/unfollow/:userId', ensureAuthenticated, async (req, res) => {
     userToUnfollow.followers = userToUnfollow.followers.filter(
       id => !id.equals(currentUser._id)
     );
+
+    // Delete the previous follow notification
+    await Notification.findOneAndDelete({
+      recipient: userToUnfollow._id,
+      sender: currentUser._id,
+      type: 'follow'
+    });
 
     await currentUser.save();
     await userToUnfollow.save();

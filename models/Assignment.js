@@ -6,7 +6,8 @@ const postSchema = new mongoose.Schema({
   description: { type: String },
   dueDate: { type: Date, required: true },
   class: { type: String },
-  file: { type: String }
+  file: { type: String },
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 module.exports = mongoose.model('Post', postSchema, 'posts');

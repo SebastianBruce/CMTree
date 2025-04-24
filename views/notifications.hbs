@@ -1,0 +1,68 @@
+<main class="home-main">
+  <div class="assignments-hero">
+
+    <h2 class="section-title">Notifications</h2>
+
+    {{#if notifications.length}}
+      <ul class="assignments-list">
+          {{#each notifications}}
+            {{#ifEquals this.type "follow"}}
+              <li class="assignment-item {{#unless this.isRead}}unread-notification{{/unless}}" onclick="window.location.href='/{{this.sender.username}}'">
+              <div class="assignment-content">
+                <div class="user-info">
+                  <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
+                  <p class="username">@{{this.sender.username}}</p>
+                </div>
+                <div class="notification-text">
+                  <p><strong>@{{this.sender.username}}</strong> followed you.</p>
+                </div>
+              </div>
+            </li>
+          {{else ifEquals this.type "like"}}
+              <li class="assignment-item {{#unless this.isRead}}unread-notification{{/unless}}">
+                <a href="/{{this.sender.username}}" class="profile-wrapper-link">
+                  <div class="assignment-content">
+
+                    <!-- Profile section -->
+                    <div class="user-info">
+                      <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
+                      <p class="username">@{{this.sender.username}}</p>
+                    </div>
+
+                    <!-- Notification content -->
+                    <div class="notification-text">
+                      <p><strong>@{{this.sender.username}}</strong> liked your 
+                        <a href="/assignments/{{this.assignment._id}}" class="notification-link" onclick="event.stopPropagation();">post</a>.
+                      </p>
+
+                      <!-- Post preview -->
+                      <div class="post-preview" onclick="event.stopPropagation(); window.location.href='/assignments/{{this.assignment._id}}'">
+                        <h3>{{this.assignment.title}}</h3>
+                      </div>
+                    </div>
+
+                  </div>
+                </a>
+              </li>
+          {{/ifEquals}}
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>You have no notifications yet.</p>
+    {{/if}}
+
+  </div>
+</main>
+<script>
+  // Only run on the notifications page
+  if (window.location.pathname === "/notifications") {
+    window.addEventListener("DOMContentLoaded", () => {
+      fetch("/notifications/mark-all-read", {
+        method: "PUT"
+      }).catch((err) => {
+        // Fail silently
+        console.error("Failed to mark notifications as read:", err);
+      });
+    });
+  }
+</script>
