@@ -36,10 +36,10 @@
     <section class="user-posts-section">
       <h2 class="section-title">Posts</h2>
 
-      {{#if assignments.length}}
-        <ul class="posts-list">
-          {{#each assignments}}
-            <li class="post-item" onclick="window.location.href='/assignments/{{this._id}}'">
+      {{#if posts.length}}
+        <ul class="profile-posts-list">
+          {{#each posts}}
+            <li class="profile-post-item" onclick="window.location.href='/posts/{{this._id}}'">
               <h3>{{this.title}}</h3>
               <p>{{this.description}}</p>
               <div class="like-section">

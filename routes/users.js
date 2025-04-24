@@ -3,11 +3,11 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const User = require('../models/User');
-const Assignment = require("../models/Assignment");
+const Post = require("../models/Post");
 const Notification = require("../models/Notification");
 
 const upload = multer(); // For handling profile picture uploads
-const reserved = ['login', 'register', 'assignments', 'edit-profile', 'profile-picture', 'follow', 'unfollow', 'logout', 'notifications'];
+const reserved = ['login', 'register', 'posts', 'edit-profile', 'profile-picture', 'follow', 'unfollow', 'logout', 'notifications'];
 
 // Ensure the user is logged in
 function ensureAuthenticated(req, res, next) {
@@ -137,13 +137,13 @@ router.get('/:username', async (req, res, next) => {
       return res.redirect("/");
     }
 
-    const assignments = await Assignment.find({ userId: user._id });
+    const posts = await Post.find({ userId: user._id });
     const isFollowing = req.isAuthenticated() &&
       user.followers.some(followerId => followerId.equals(req.user._id));
 
     const userId = req.user ? req.user._id.toString() : null;
 
-    const assignmentsWithLikeStatus = assignments.map(a => {
+    const postsWithLikeStatus = posts.map(a => {
       const likedByUser = userId ? a.likes.map(id => id.toString()).includes(userId) : false;
       return {
         ...a.toObject(),
@@ -154,7 +154,7 @@ router.get('/:username', async (req, res, next) => {
     res.render('profile', {
       title: `${user.username}'s Profile`,
       profileUser: user,
-      assignments: assignmentsWithLikeStatus,
+      posts: postsWithLikeStatus,
       isOwnProfile: req.isAuthenticated() && req.user.username === user.username,
       isFollowing
     });

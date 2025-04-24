@@ -266,7 +266,7 @@ body {
   color: #16a916;
 }
 
-/* Assignments List */
+/* Posts List */
 
 .guest-warning {
   background-color: #fff3cd;
@@ -390,12 +390,12 @@ body {
   background-color: #3bd43b;
 }
 
-.assignments-list {
+.posts-list {
   list-style-type: none;
   padding: 0;
 }
 
-.assignment-item {
+.post-item {
   background-color: #ffffff;
   color: #333;
   padding: 20px;
@@ -406,21 +406,21 @@ body {
   transition: background-color 0.1s ease;
 }
 
-.assignment-item:hover {
+.post-item:hover {
   background-color: #f0eded;
 }
 
-.assignment-item h2 {
+.post-item h2 {
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
 
-.assignment-item p {
+.post-item p {
   font-size: 1rem;
   margin-bottom: 10px;
 }
 
-.assignment-content .user-info {
+.post-content .user-info {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -431,26 +431,26 @@ body {
   text-decoration: none;
 }
 
-.assignment-content .profile-pic {
+.post-content .profile-pic {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.assignment-content .username {
+.post-content .username {
   font-weight: bold;
   color: #16a916;
 }
 
-.assignment-content .username:hover {
+.post-content .username:hover {
   font-weight: bold;
   color: #16a916;
   text-decoration: underline;
 }
 
-/* Assignment Detail */
-.assignments-hero {
+/* Post Detail */
+.posts-hero {
   max-width: 900px;
   margin: 0 auto;
   padding: 30px;
@@ -460,18 +460,18 @@ body {
   color: #333;
 }
 
-.assignment-hero h1 {
+.post-hero h1 {
   font-size: 2rem;
   margin-bottom: 20px;
 }
 
-.assignment-hero p {
+.post-hero p {
   font-size: 1.2rem;
   margin-bottom: 15px;
 }
 
-/* New Assignment Page */
-.new-assignment-page {
+/* New Post Page */
+.new-post-page {
   padding: 60px 20px;
   flex: 1;
   display: flex;
@@ -479,7 +479,7 @@ body {
   justify-content: center;
 }
 
-.assignments-hero {
+.posts-hero {
   background-color: #ffffff;
   color: #333;
   padding: 30px;
@@ -490,7 +490,7 @@ body {
   margin: 0 auto;
 }
 
-.assignments-hero h1 {
+.posts-hero h1 {
   font-size: 2.5rem;
   margin-bottom: 30px;
   color: #16a916;
@@ -595,7 +595,7 @@ body {
 }
 
 /* Additional Styles for Edit Profile */
-.assignments-hero h1 {
+.posts-hero h1 {
   font-size: 2rem;
   margin-bottom: 20px;
   color: #16a916;
@@ -748,12 +748,12 @@ body {
   padding-bottom: 10px;
 }
 
-.posts-list {
+.profile-posts-list {
   list-style: none;
   padding: 0;
 }
 
-.post-item {
+.profile-post-item {
   margin-bottom: 20px;
   background-color: rgba(255, 255, 255, 0.07);
   border-radius: 10px;
@@ -890,22 +890,13 @@ body {
   margin-bottom: 20px;
 }
 
-.assignment-item.unread {
-  background-color: #fff4b3; /* Yellowish/goldish color */
-}
-
-.assignment-item.read {
-  background-color: #ffffff; /* Default background color when read */
-  opacity: 0.6; /* Optional: make read notifications less prominent */
-}
-
 @media (max-width: 600px) {
-  .assignments-hero {
+  .posts-hero {
     padding: 20px;
     width: 90%;
   }
 
-  .assignments-hero h1 {
+  .posts-hero h1 {
     font-size: 2rem;
   }
 

@@ -1,14 +1,14 @@
 <main class="home-main">
-  <div class="assignments-hero">
+  <div class="posts-hero">
 
     <h2 class="section-title">Notifications</h2>
 
     {{#if notifications.length}}
-      <ul class="assignments-list">
+      <ul class="posts-list">
           {{#each notifications}}
             {{#ifEquals this.type "follow"}}
-              <li class="assignment-item {{#unless this.isRead}}unread-notification{{/unless}}" onclick="window.location.href='/{{this.sender.username}}'">
-              <div class="assignment-content">
+              <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}" onclick="window.location.href='/{{this.sender.username}}'">
+              <div class="post-content">
                 <div class="user-info">
                   <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
                   <p class="username">@{{this.sender.username}}</p>
@@ -19,9 +19,9 @@
               </div>
             </li>
           {{else ifEquals this.type "like"}}
-              <li class="assignment-item {{#unless this.isRead}}unread-notification{{/unless}}">
+              <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}">
                 <a href="/{{this.sender.username}}" class="profile-wrapper-link">
-                  <div class="assignment-content">
+                  <div class="post-content">
 
                     <!-- Profile section -->
                     <div class="user-info">
@@ -32,12 +32,12 @@
                     <!-- Notification content -->
                     <div class="notification-text">
                       <p><strong>@{{this.sender.username}}</strong> liked your 
-                        <a href="/assignments/{{this.assignment._id}}" class="notification-link" onclick="event.stopPropagation();">post</a>.
+                        <a href="/posts/{{this.post._id}}" class="notification-link" onclick="event.stopPropagation();">post</a>.
                       </p>
 
                       <!-- Post preview -->
-                      <div class="post-preview" onclick="event.stopPropagation(); window.location.href='/assignments/{{this.assignment._id}}'">
-                        <h3>{{this.assignment.title}}</h3>
+                      <div class="post-preview" onclick="event.stopPropagation(); window.location.href='/posts/{{this.post._id}}'">
+                        <h3>{{this.post.title}}</h3>
                       </div>
                     </div>
 

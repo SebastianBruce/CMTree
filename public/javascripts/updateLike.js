@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const id = button.getAttribute("data-id");
 
-      const response = await fetch(`/assignments/${id}/like`, {
+      const response = await fetch(`/posts/${id}/like`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

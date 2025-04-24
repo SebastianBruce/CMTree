@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Assignment = require("../models/Assignment");
+const Post = require("../models/Post");
 const Notification = require("../models/Notification");
 
 // Ensure the user is authenticated
@@ -18,7 +18,7 @@ router.get("/notifications", ensureAuthenticated, async (req, res) => {
     const notifications = await Notification.find({ recipient: req.user._id })
       .sort({ createdAt: -1 })
       .populate("sender", "username profilePicture")
-      .populate("assignment", "title description");
+      .populate("post", "title description");
 
     // Render the notifications view, passing the notifications data
     res.render("notifications", { notifications, user: req.user });

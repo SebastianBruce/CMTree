@@ -83,8 +83,8 @@ app.get('/logout', (req, res) => {
 });
 app.get('/register', (req, res) => res.render('register'));
 
-const assignmentsRouter = require('./routes/assignments');
-app.use('/', assignmentsRouter);
+const postsRouter = require('./routes/posts');
+app.use('/', postsRouter);
 
 //Error handling middleware
 app.use(function(req, res, next) {

@@ -10,10 +10,10 @@ const upload = multer();
 const User = require('../models/User');
 const Notification = require("../models/Notification");
 
-//If a user logged in, redirect them to assignments page
+//If a user logged in, redirect them to posts page
 function redirectIfAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    return res.redirect('/assignments');
+    return res.redirect('/posts');
   }
   next();
 }
@@ -25,7 +25,7 @@ router.get('/login', redirectIfAuthenticated, (req, res) => {
 
 //Handle login POST request
 router.post('/login', passport.authenticate('local', {
-  successRedirect: '/assignments',
+  successRedirect: '/posts',
   failureRedirect: '/login',
   failureFlash: true
 }));
