@@ -1,3 +1,6 @@
+<head>
+  <link rel="stylesheet" href="/stylesheets/notifications.css">
+</head>
 <main class="home-main">
   <div class="posts-hero">
 
@@ -5,20 +8,22 @@
 
     {{#if notifications.length}}
       <ul class="posts-list">
-          {{#each notifications}}
-            {{#ifEquals this.type "follow"}}
-              <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}" onclick="window.location.href='/{{this.sender.username}}'">
+        {{#each notifications}}
+          {{#ifEquals this.type "follow"}}
+            <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}" onclick="window.location.href='/{{this.sender.username}}'">
               <div class="post-content">
                 <div class="user-info">
                   <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
                   <p class="username">@{{this.sender.username}}</p>
+                  <p>-</p><p class="date">{{timeAgo this.createdAt}}</p>
                 </div>
                 <div class="notification-text">
                   <p><strong>@{{this.sender.username}}</strong> followed you.</p>
                 </div>
               </div>
             </li>
-          {{else ifEquals this.type "like"}}
+          {{else}}
+            {{#ifEquals this.type "like"}}
               <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}">
                 <a href="/{{this.sender.username}}" class="profile-wrapper-link">
                   <div class="post-content">
@@ -27,23 +32,29 @@
                     <div class="user-info">
                       <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
                       <p class="username">@{{this.sender.username}}</p>
+                      <p class="date">- {{timeAgo this.createdAt}}</p>
                     </div>
 
                     <!-- Notification content -->
                     <div class="notification-text">
                       <p><strong>@{{this.sender.username}}</strong> liked your 
-                        <a href="/posts/{{this.post._id}}" class="notification-link" onclick="event.stopPropagation();">post</a>.
+                        <a href="/posts/{{this.post._id}}" class="notification-link" onclick="event.stopPropagation();">{{this.post.type}}</a>.
                       </p>
 
                       <!-- Post preview -->
                       <div class="post-preview" onclick="event.stopPropagation(); window.location.href='/posts/{{this.post._id}}'">
-                        <h3>{{this.post.title}}</h3>
+                        {{#ifEquals this.post.type "update"}}
+                          <p>{{this.post.description}}</p>
+                        {{else}}
+                          <h3>{{this.post.title}}</h3>
+                        {{/ifEquals}}
                       </div>
                     </div>
 
                   </div>
                 </a>
               </li>
+            {{/ifEquals}}
           {{/ifEquals}}
         {{/each}}
       </ul>
@@ -53,16 +64,5 @@
 
   </div>
 </main>
-<script>
-  // Only run on the notifications page
-  if (window.location.pathname === "/notifications") {
-    window.addEventListener("DOMContentLoaded", () => {
-      fetch("/notifications/mark-all-read", {
-        method: "PUT"
-      }).catch((err) => {
-        // Fail silently
-        console.error("Failed to mark notifications as read:", err);
-      });
-    });
-  }
-</script>
+<script src="/javascripts/markAsRead.js"></script>
+<script src="/javascripts/reloadPage.js"></script>

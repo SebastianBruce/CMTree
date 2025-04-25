@@ -2,8 +2,12 @@
   <div class="profile-container">
     <section class="profile-header">
       {{#unless isOwnProfile}}
-        <form method="POST" action="{{#if isFollowing}}/unfollow/{{profileUser._id}}{{else}}/follow/{{profileUser._id}}{{/if}}" class="follow-form">
-          <button class="btn" type="submit">
+        <form id="follow-form" class="follow-form">
+          <button 
+            type="button" 
+            class="{{#if user}}btn{{else}}btn not-logged-in{{/if}}"
+            data-following="{{isFollowing}}" 
+            data-user-id="{{profileUser._id}}">
             {{#if isFollowing}}Unfollow{{else}}Follow{{/if}}
           </button>
         </form>
@@ -43,7 +47,7 @@
               <h3>{{this.title}}</h3>
               <p>{{this.description}}</p>
               <div class="like-section">
-                <button class="like-btn" data-id="{{this._id}}">
+                <button {{#if ../user}}class="like-btn"{{else}}class="like-btn not-logged-in"{{/if}} data-id="{{this._id}}">
                     {{#if likedByUser}}❤️{{else}}🤍{{/if}} <span class="like-count">{{this.likes.length}}</span>
                 </button>
               </div>
@@ -57,3 +61,5 @@
   </div>
 </main>
 <script src="/javascripts/updateLike.js"></script>
+<script src="/javascripts/reloadPage.js"></script>
+<script src="/javascripts/followUnfollow.js"></script>

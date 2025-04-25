@@ -14,12 +14,15 @@
       {{#if user}}
         <div class="tab-divider"></div>
         <a href="/posts/set-filter/following" class="sort-tab {{#ifEquals filter 'following'}}active{{/ifEquals}}" title="View posts from people you follow.">Following</a>
+        <div class="tab-divider"></div>
+        <a href="/posts/set-filter/blog" class="sort-tab {{#ifEquals filter 'blog'}}active{{/ifEquals}}" title="View blog posts.">Blog Posts</a>
+        <div class="tab-divider"></div>
+        <a href="/posts/set-filter/event" class="sort-tab {{#ifEquals filter 'event'}}active{{/ifEquals}}" title="View events.">Events</a>
       {{else}}
         <div class="tab-divider"></div>
         <a href="/login" class="sort-tab inactive">Following</a>
       {{/if}}
     </div>
-
 
     <!-- Add Button for Users -->
     {{#if user}}
@@ -42,13 +45,19 @@
               <a href="/{{this.userId.username}}" class="profile-link">
               <p class="username">@{{this.userId.username}}</p>
               </a>
+              <p>-</p><p class="date">{{timeAgo this.createdAt}}</p>
+              <p>-</p><p class="date">{{this.type}}</p>
             </div>
 
             <!-- Post content -->
             <h2>{{this.title}}</h2>
-            <p>{{this.description}}</p>
+            {{#ifEquals this.type "event"}}
+              <p class="date">{{formatDate this.eventDate}}</p>
+            {{else}}
+              <p>{{this.description}}</p>
+            {{/ifEquals}}
             <div class="like-section">
-              <button class="like-btn" data-id="{{this._id}}">
+              <button {{#if ../user}}class="like-btn"{{else}}class="like-btn not-logged-in"{{/if}} data-id="{{this._id}}">
                   {{#if likedByUser}}❤️{{else}}🤍{{/if}} <span class="like-count">{{this.likes.length}}</span>
               </button>
             </div>
@@ -59,3 +68,4 @@
   </div>
 </main>
 <script src="/javascripts/updateLike.js"></script>
+<script src="/javascripts/reloadPage.js"></script>

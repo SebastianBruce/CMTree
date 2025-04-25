@@ -7,14 +7,14 @@ const Notification = require("../models/Notification");
 //List posts
 router.get("/posts", async (req, res) => {
   try {
-    const sortBy = req.query.sortBy || 'dueDate';
+    const sortBy = req.query.sortBy || 'createdAt';
     const searchQuery = req.query.search || '';
     const filter = req.query.filter || (req.user ? req.user.filterPreference : 'all'); // Use saved filterPreference if user is logged in
 
     let sortOption = {};
     if (sortBy === 'class') sortOption = { class: 1 };
     else if (sortBy === 'title') sortOption = { title: 1 };
-    else sortOption = { dueDate: 1 };
+    else sortOption = { createdAt: -1 };
 
     let searchFilter = {};
     if (searchQuery) {
@@ -30,8 +30,12 @@ router.get("/posts", async (req, res) => {
       const currentUser = await mongoose.model('User').findById(req.user._id);
       const followingIds = currentUser.following || [];
       searchFilter.userId = { $in: followingIds };
+    } else if (filter === 'blog') {
+      searchFilter.type = 'blog';
+    } else if (filter === 'event') {
+      searchFilter.type = 'event';
     }
-
+    
     // Fetch posts and populate the associated user data (username and profile picture)
     const posts = await Post.find(searchFilter)
     .sort(sortOption)
@@ -78,16 +82,17 @@ router.post("/posts", async (req, res) => {
   }
 
   try {
-    const { title, description, dueDate, class: postClass, file } = req.body;
+    const { title, description, eventDate, createdAt, file, type } = req.body;
 
     const newPost = new Post({
       userId: req.user._id,
       title,
+      eventDate,
       description,
-      dueDate,
-      class: postClass,
+      createdAt,
       file,
-    });
+      type
+    });    
 
     await newPost.save();
     req.flash("success_msg", "Post added successfully!");
@@ -107,9 +112,20 @@ router.get("/posts/:id", async (req, res) => {
       return res.redirect("/posts");
     }
 
-    res.render("post-details", {
+    const isOwner = req.user && post.userId.equals(req.user._id);
+
+    // Check the post type and render a specific view
+    let view = "post-details";
+    if (post.type === 'event') {
+      view = "event-details";
+    } else if (post.type === 'blog') {
+      view = "blog-details";
+    } 
+
+    res.render(view, {
       post,
       isGuest: !req.user,
+      isOwner
     });
   } catch (err) {
     req.flash("error_msg", "Could not load post.");
@@ -126,17 +142,19 @@ router.get("/posts/:id/edit", async (req, res) => {
       return res.redirect("/posts");
     }
 
-    if (!req.user || req.user && !post.userId.equals(req.user._id)) {
+    if (!req.user || !post.userId.equals(req.user._id)) {
       req.flash("error_msg", "Unauthorized access.");
       return res.redirect("/login");
     }
 
-    //Format due date for input[type=date]
-    const formattedDueDate = post.dueDate.toISOString().split("T")[0];
+    // Format the eventDate to YYYY-MM-DD for date input
+    const formattedDate = post.eventDate
+      ? new Date(post.eventDate).toISOString().split("T")[0]
+      : "";
 
     res.render("edit-post", {
       post,
-      formattedDueDate,
+      formattedDate
     });
   } catch (err) {
     req.flash("error_msg", "Could not load post for editing.");
@@ -152,12 +170,13 @@ router.put("/posts/:id", async (req, res) => {
   }
 
   try {
-    const { title, description, dueDate, class: postClass, file } = req.body;
+    const { title, description, eventDate, createdAt, class: postClass, file } = req.body;
 
     const updatedPost = {
       title,
       description,
-      dueDate: new Date(dueDate),
+      eventDate,
+      createdAt: new Date(),
       class: postClass,
       file,
     };
@@ -205,7 +224,7 @@ router.get("/posts/set-filter/:filter", async (req, res) => {
   }
 
   const { filter } = req.params;
-  if (filter !== 'all' && filter !== 'following') {
+  if (filter !== 'all' && filter !== 'following' && filter !== 'blog' && filter !== 'event') {
     return res.status(400).send("Invalid filter option.");
   }
 
@@ -225,14 +244,19 @@ router.get("/posts/data", async (req, res) => {
     const filter = req.query.filter || (req.user ? req.user.filterPreference : 'all');
 
     let searchFilter = {};
+    // Handle filtering
     if (filter === 'following' && req.user) {
       const currentUser = await mongoose.model('User').findById(req.user._id);
       const followingIds = currentUser.following || [];
       searchFilter.userId = { $in: followingIds };
+    } else if (filter === 'blog') {
+      searchFilter.type = 'blog';
+    } else if (filter === 'event') {
+      searchFilter.type = 'event';
     }
 
     const posts = await Post.find(searchFilter)
-      .sort({ dueDate: 1 })
+      .sort({ createdAt: 1 })
       .populate('userId', 'username profilePicture');
 
     res.json(posts);

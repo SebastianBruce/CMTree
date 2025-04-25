@@ -39,12 +39,35 @@ app.use((req, res, next) => {
 
 //Format date
 hbs.registerHelper('formatDate', function(date) {
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
+  if (date !== null) {
+    return new Date(date).toLocaleString('en-US', {
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+});
+
+hbs.registerHelper('timeAgo', function(date) {
+  const now = new Date();
+  const then = new Date(date);
+  const diff = Math.floor((now - then) / 1000); // seconds difference
+
+  if (diff < 60) return 'now'; // Less than a minute ago
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`; // Less than an hour ago
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`; // Less than a day ago
+  if (diff < 604800) return `${Math.floor(diff / 86400)}d ago`; // Less than a week ago
+
+  // For older than a week, return a formatted date
+  return then.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    timeZone: 'UTC'
-  });
+    year: 'numeric',
+    timeZone: 'UTC', // User time-zone
+  });  
 });
 
 // In your app.js or wherever you set up Handlebars

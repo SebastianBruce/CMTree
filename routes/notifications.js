@@ -18,7 +18,7 @@ router.get("/notifications", ensureAuthenticated, async (req, res) => {
     const notifications = await Notification.find({ recipient: req.user._id })
       .sort({ createdAt: -1 })
       .populate("sender", "username profilePicture")
-      .populate("post", "title description");
+      .populate("post", "title description type");
 
     // Render the notifications view, passing the notifications data
     res.render("notifications", { notifications, user: req.user });

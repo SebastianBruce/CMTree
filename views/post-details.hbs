@@ -9,15 +9,14 @@
     {{/if}}
     <h1>{{post.title}}</h1>
     <p><strong>Description:</strong> {{post.description}}</p>
-    <p><strong>Class:</strong> {{post.class}}</p>
-    <p><strong>Due Date:</strong> {{formatDate post.dueDate}}</p>
+    <p>{{formatDate post.createdAt}}</p>
 
     {{#if post.file}}
       <p><strong>File:</strong>
         <a href="{{post.file}}" target="_blank">Download</a></p>
     {{/if}}
 
-    {{#if user}}
+    {{#if isOwner}}
       <div class="actions">
         <a href="/posts/{{post._id}}/edit" class="btn">Edit</a>
         <form id="delete-form" action="/posts/{{post._id}}?_method=DELETE" method="POST" style="display:inline;">
@@ -39,3 +38,4 @@
   </div>
 </main>
 <script src="/javascripts/deleteConfirmation.js"></script>
+<script src="/javascripts/reloadPage.js"></script>
