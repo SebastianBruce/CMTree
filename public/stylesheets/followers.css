@@ -1,0 +1,30 @@
+/* Followers/Following list styles */
+.user-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.user-list-item {
+  display: flex;
+  align-items: center;
+  background-color: white;
+  color: #333;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.user-info h3 {
+  margin: 0;
+  color: #064e1f;
+}

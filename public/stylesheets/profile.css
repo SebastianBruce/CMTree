@@ -1,0 +1,103 @@
+/* Profile Styles */
+.profile-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.profile-header {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+
+.profile-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ffffff;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.profile-info p {
+  margin-bottom: 0;
+}
+
+.profile-name {
+  font-size: 2rem;
+  margin-bottom: 0px;
+}
+
+.profile-username {
+  font-size: 1.2rem;
+  color: #d4d4d4;
+  margin-bottom: 5px;
+}
+
+/* Follow stats and button */
+.follow-form,
+.edit-profile-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.follow-stats {
+  display: flex;
+  gap: 20px;
+  font-size: 1rem;
+}
+
+.follow-stats a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.follow-stats a:hover {
+  text-decoration: underline;
+}
+
+/* Profile posts */
+.user-posts-section {
+  margin-top: 20px;
+}
+
+.section-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ffffff;
+  padding-bottom: 10px;
+}
+
+.profile-posts-list {
+  list-style: none;
+  padding: 0;
+}
+.profile-post-item {
+  margin-bottom: 20px;
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 15px;
+  transition: background 0.2s ease-in-out;
+}
+
+.no-posts {
+  font-style: italic;
+  color: #dddddd;
+}

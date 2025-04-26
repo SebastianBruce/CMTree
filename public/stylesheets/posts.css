@@ -1,0 +1,111 @@
+/* Search Bar */
+.search-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 500px;
+  margin: 0 auto 20px;
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  font-size: 1rem;
+  background-color: #f7f9fc;
+  color: #333;
+}
+
+.search-input:focus {
+  border-color: #16a916;
+  outline: none;
+}
+
+.search-btn {
+  background-color: #16a916;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background-color: #3bd43b;
+}
+
+/* Style for Sorting Tabs */
+.sort-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sort-tab {
+  background-color: transparent;
+  color: #3bd43b;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 1px solid #3bd43b;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.sort-tab.inactive {
+  color: #8d8d8d;
+  border-bottom: 1px solid #8d8d8d;
+  cursor: not-allowed;
+}
+
+.sort-tab:hover {
+  background-color: #f0eded;
+  color: #16a916;
+  transform: scale(1.05);
+}
+
+.sort-tab.inactive:hover {
+  background-color: transparent;
+  color: #8d8d8d;
+  transform: none;
+}
+
+.sort-tab.active {
+  color: #16a916;
+  border-bottom: 3px solid #16a916;
+}
+
+.tab-divider {
+  width: 2px;
+  height: 20px;
+  background-color: #ffffff;
+  margin: 0 10px;
+}
+
+/* Add post button */
+.add-btn {
+  background-color: #16a916;
+  color: white;
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 1em auto;
+  display: block;
+  transition: background-color 0.2s ease;
+}
+
+.add-btn:hover {
+  background-color: #3bd43b;
+}

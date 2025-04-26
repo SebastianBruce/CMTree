@@ -1,0 +1,12 @@
+/* Edit Profile Styles */
+.posts-hero h1 {
+  margin-bottom: 20px;
+}
+
+.edit-btn {
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  transform: translateY(-3px);
+}

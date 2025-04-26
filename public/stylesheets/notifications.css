@@ -1,0 +1,46 @@
+/* Notification styles */
+.unread-notification {
+  background-color: #fff8dc;
+  border-left: 5px solid gold;
+}
+
+.notification-text {
+  margin-top: 10px;
+}
+
+.notification-text strong:hover {
+  text-decoration: underline;
+}
+
+.profile-wrapper-link {
+  color: black;
+  text-decoration: none;
+}
+
+.notification-link {
+  color: #ffc107;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.notification-link:hover {
+  color: #16a916;
+}
+
+.post-preview {
+  background-color: #ffffff;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.post-preview:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,48 @@
+/* Login Styles */
+.login-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px);
+    padding: 20px;
+  }
+  
+  .login-container {
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .login-container h1 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #16a916;
+  }
+  
+  .input-help {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 0.25rem;
+  }
+  
+  .register-link {
+    margin-top: 15px;
+    font-size: 0.9rem;
+  }
+  
+  .register-link a {
+    color: #16a916;
+    text-decoration: none;
+  }
+  
+  .register-link a:hover {
+    text-decoration: underline;
+  }
+  
+  .register-link {
+    color: black;
+  }

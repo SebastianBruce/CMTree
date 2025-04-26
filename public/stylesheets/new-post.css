@@ -1,0 +1,8 @@
+/* New Post Page */
+.new-post-page {
+  padding: 60px 20px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
