@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const createError = require('http-errors');
 const methodOverride = require('method-override');
 const hbs = require('hbs');
+const moment = require('moment');
 
 //Load environment variables and database connection
 require('dotenv').config();
@@ -51,6 +52,12 @@ hbs.registerHelper('formatDate', function(date) {
   }
 });
 
+hbs.registerHelper('formatDateForInput', function(date) {
+  if (date !== null) {
+    return moment(date).format('YYYY-MM-DDTHH:mm');
+  }
+});
+
 hbs.registerHelper('timeAgo', function(date) {
   const now = new Date();
   const then = new Date(date);
@@ -66,7 +73,6 @@ hbs.registerHelper('timeAgo', function(date) {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
-    timeZone: 'UTC', // User time-zone
   });  
 });
 

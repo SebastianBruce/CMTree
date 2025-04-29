@@ -22,40 +22,54 @@
                 </div>
               </div>
             </li>
-          {{else}}
-            {{#ifEquals this.type "like"}}
-              <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}">
-                <a href="/{{this.sender.username}}" class="profile-wrapper-link">
-                  <div class="post-content">
 
-                    <!-- Profile section -->
-                    <div class="user-info">
-                      <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
-                      <p class="username">@{{this.sender.username}}</p>
-                      <p class="date">- {{timeAgo this.createdAt}}</p>
-                    </div>
-
-                    <!-- Notification content -->
-                    <div class="notification-text">
-                      <p><strong>@{{this.sender.username}}</strong> liked your 
-                        <a href="/posts/{{this.post._id}}" class="notification-link" onclick="event.stopPropagation();">{{this.post.type}}</a>.
-                      </p>
-
-                      <!-- Post preview -->
-                      <div class="post-preview" onclick="event.stopPropagation(); window.location.href='/posts/{{this.post._id}}'">
-                        {{#ifEquals this.post.type "update"}}
-                          <p>{{this.post.description}}</p>
-                        {{else}}
-                          <h3>{{this.post.title}}</h3>
-                        {{/ifEquals}}
-                      </div>
-                    </div>
-
+          {{else ifEquals this.type "like"}}
+            <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}">
+              <a href="/{{this.sender.username}}" class="profile-wrapper-link">
+                <div class="post-content">
+                  <div class="user-info">
+                    <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
+                    <p class="username">@{{this.sender.username}}</p>
+                    <p class="date">- {{timeAgo this.createdAt}}</p>
                   </div>
-                </a>
-              </li>
-            {{/ifEquals}}
+                  <div class="notification-text">
+                    <p><strong>@{{this.sender.username}}</strong> liked your 
+                      <a href="/posts/{{this.post._id}}" class="notification-link" onclick="event.stopPropagation();">{{this.post.type}}</a>.
+                    </p>
+                    <div class="post-preview" onclick="event.stopPropagation(); window.location.href='/posts/{{this.post._id}}'">
+                      {{#ifEquals this.post.type "update"}}
+                        <p>{{this.post.description}}</p>
+                      {{else}}
+                        <h3>{{this.post.title}}</h3>
+                      {{/ifEquals}}
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+
+          {{else ifEquals this.type "RSVP"}}
+            <li class="post-item {{#unless this.isRead}}unread-notification{{/unless}}">
+              <a href="/{{this.sender.username}}" class="profile-wrapper-link">
+                <div class="post-content">
+                  <div class="user-info">
+                    <img src="/profile-picture/{{this.sender._id}}" alt="{{this.sender.username}}'s profile picture" class="profile-pic">
+                    <p class="username">@{{this.sender.username}}</p>
+                    <p class="date">- {{timeAgo this.createdAt}}</p>
+                  </div>
+                  <div class="notification-text">
+                    <p><strong>@{{this.sender.username}}</strong> RSVP'd to your 
+                      <a href="/posts/{{this.post._id}}" class="notification-link" onclick="event.stopPropagation();">{{this.post.type}}</a>.
+                    </p>
+                    <div class="post-preview" onclick="event.stopPropagation(); window.location.href='/posts/{{this.post._id}}'">
+                      <h3>{{this.post.title}}</h3>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
           {{/ifEquals}}
+
         {{/each}}
       </ul>
     {{else}}

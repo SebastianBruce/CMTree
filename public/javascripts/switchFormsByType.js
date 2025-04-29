@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const eventDateInput = document.getElementById("eventDate");
 
   function toggleFields() {
-    const type = typeSelect ? typeSelect.value : ""; // In case the typeSelect is not present for editing.
+    const type = typeSelect ? typeSelect.value : "";
 
     // Title
     if (type === "update") {

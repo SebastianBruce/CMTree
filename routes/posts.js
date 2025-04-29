@@ -46,6 +46,7 @@ router.get("/posts", async (req, res) => {
     // Add likedByUser to each post
     const postsWithLikeStatus = posts.map(a => {
       const likedByUser = userId ? a.likes.map(id => id.toString()).includes(userId) : false;
+
       return {
         ...a.toObject(),
         likedByUser
@@ -106,13 +107,20 @@ router.post("/posts", async (req, res) => {
 //Show details of one post
 router.get("/posts/:id", async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.id)
+      .populate('userId attendees')
+      .populate('replies.user');
+
     if (!post) {
       req.flash("error_msg", "Post not found.");
       return res.redirect("/posts");
     }
 
     const isOwner = req.user && post.userId.equals(req.user._id);
+    
+    const userId = req.user ? req.user._id.toString() : null;
+    const likedByUser = userId ? post.likes.map(id => id.toString()).includes(userId) : false;
+    const userAttending = userId ? post.attendees.some(att => att._id.toString() === userId) : false;
 
     // Check the post type and render a specific view
     let view = "post-details";
@@ -125,7 +133,9 @@ router.get("/posts/:id", async (req, res) => {
     res.render(view, {
       post,
       isGuest: !req.user,
-      isOwner
+      isOwner,
+      likedByUser,
+      userAttending
     });
   } catch (err) {
     req.flash("error_msg", "Could not load post.");
@@ -321,6 +331,109 @@ router.post("/posts/:id/like", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+// Toggle like on an post
+router.post("/posts/:id/rsvp", async (req, res) => {
+  if (!req.user) return res.status(401).json({ error: "Not authenticated" });
+
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post || post.type !== 'event') return res.status(404).json({ error: "Post not found" });
+
+    const userId = req.user._id;
+    const index = post.attendees.indexOf(userId);
+
+    if (index === -1) {
+      // Not yet liked — add
+      post.attendees.push(userId);
+
+      // Create a like notification (if not liking own post)
+      if (!post.userId.equals(userId)) {
+        // Remove old notification if it exists
+        await Notification.findOneAndDelete({
+          recipient: post.userId,
+          sender: userId,
+          type: 'RSVP',
+          post: post._id
+        });
+
+        // Create new notification
+        await Notification.create({
+          recipient: post.userId,
+          sender: userId,
+          type: 'RSVP',
+          post: post._id
+        });
+
+        // Emit real-time event using Socket.IO
+        const io = req.app.get('io');
+        io.to(post.userId._id.toString()).emit('new-notification');
+      }
+    } else {
+      // Already liked — remove
+      post.attendees.splice(index, 1);
+
+      // Remove the existing like notification
+      await Notification.findOneAndDelete({
+        recipient: post.userId,
+        sender: userId,
+        type: 'RSVP',
+        post: post._id
+      });
+    }
+
+    res.json({ attending: index === -1 });
+    await post.save();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+router.get("/posts/:id/attendees", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id).populate('attendees', 'name username _id');
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.json(post.attendees); // Send the list of attendees
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Handle new reply
+router.post("/posts/:id/replies", async (req, res) => {
+  if (!req.user) {
+    req.flash("error_msg", "You must be logged in to reply.");
+    return res.redirect("/login");
+  }
+
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      req.flash("error_msg", "Post not found.");
+      return res.redirect("/posts");
+    }
+
+    const newReply = {
+      user: req.user._id,
+      text: req.body.text,
+      createdAt: new Date()
+    };
+
+    post.replies.push(newReply);
+    await post.save();
+
+    res.redirect(`/posts/${post._id}`);
+  } catch (err) {
+    console.error(err);
+    req.flash("error_msg", "Error adding reply.");
+    res.redirect("/posts");
   }
 });
 

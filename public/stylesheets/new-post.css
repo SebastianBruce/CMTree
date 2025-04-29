@@ -6,3 +6,52 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Reset quill editor styles */
+/* Ensure Quill editor text doesn't inherit styles from the global CSS */
+#editor {
+  background: white;
+}
+
+.ql-editor {
+  color: black;  /* Reset text color */
+  text-align: left;  /* Ensure text is aligned left */
+  font-size: 1rem;  /* Set a consistent font size */
+}
+
+.ql-editor h1,
+.ql-editor h2,
+.ql-editor h3,
+.ql-editor h4,
+.ql-editor h5,
+.ql-editor h6 {
+  color: black; /* Reset heading color */
+  font-size: 1.5rem;  /* Set default heading size */
+  text-align: left;  /* Ensure headers are left-aligned */
+}
+
+.ql-editor p {
+  font-size: 1rem;  /* Set consistent font size for paragraphs */
+  margin-bottom: 1rem; /* Add spacing between paragraphs */
+}
+
+/* Reset styles for other block elements like blockquote */
+.ql-editor blockquote {
+  border-left: 4px solid #ccc;
+  padding-left: 16px;
+  color: black; /* Reset quote text color */
+}
+
+.ql-editor pre {
+  background-color: #f7f9fc;
+  color: #333;
+  font-size: 1rem;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+/* Prevent Quill toolbar from inheriting body styles */
+.ql-toolbar {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+}

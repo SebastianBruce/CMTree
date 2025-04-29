@@ -395,6 +395,20 @@ body {
   display: none;
 }
 
+noscript p {
+  color: red;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
 .password-wrapper {
   position: relative;
 } 

@@ -1,0 +1,271 @@
+<head>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="stylesheet" href="/stylesheets/posts.css">
+  <link rel="stylesheet" href="/stylesheets/event-detail.css">
+</head>
+<main class="post-detail-container">
+  <div class="post-content">
+
+    <div class="user-info">
+    {{#if isOwner}}
+    <div class="post-menu">
+      <button class="menu-button">⋯</button>
+      <div class="menu-dropdown hidden">
+        <a href="/posts/{{post._id}}/edit" class="dropdown-item">Edit</a>
+        <form id="delete-form" action="/posts/{{post._id}}?_method=DELETE" method="POST" style="display:inline;">
+          <button type="button" id="open-delete-modal" class="dropdown-item">Delete</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal moved outside of the dropdown -->
+    <div id="delete-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <h2>Are you sure?</h2>
+        <p>This action cannot be undone.</p>
+        <div class="modal-actions">
+          <button id="confirm-delete" class="btn btn-danger">Yes, delete</button>
+          <button id="cancel-delete" class="btn">Cancel</button>
+        </div>
+      </div>
+    </div>
+    {{/if}}
+
+      <!-- User Info -->
+      <a href="/{{post.userId.username}}" class="profile-link">
+        <img src="/profile-picture/{{post.userId._id}}" alt="{{post.userId.username}}'s profile picture"
+          class="profile-pic">
+      </a>
+      <a href="/{{post.userId.username}}" class="profile-link">
+        <p class="username">@{{post.userId.username}}</p>
+      </a>
+      <p>-</p>
+      <p class="date">{{timeAgo post.createdAt}}</p>
+      <p>-</p>
+      <p class="date">{{post.type}}</p>
+    </div>
+
+    <!-- Post Content -->
+    <div class="post-body">
+      <h2>{{post.title}}</h2>
+      <!-- Likes and interactions -->
+      <p class="event-date">📅 {{formatDate post.eventDate}}</p>
+
+      <!-- Countdown Timer -->
+      <div id="countdown-timer" data-event-date="{{post.eventDate}}">
+        <div class="wrap">
+          <div class="countdown">
+
+            <!-- Days -->
+            <div class="bloc-time days">
+              <span class="count-title">Days</span>
+
+              <div class="figure days days-1">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+
+              <div class="figure days days-2">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+
+              <div class="figure days days-3">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Hours -->
+            <div class="bloc-time hours">
+              <span class="count-title">Hours</span>
+
+              <div class="figure hours hours-1">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+
+              <div class="figure hours hours-2">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Minutes -->
+            <div class="bloc-time min">
+              <span class="count-title">Minutes</span>
+
+              <div class="figure min min-1">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+
+              <div class="figure min min-2">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Seconds -->
+            <div class="bloc-time sec">
+              <span class="count-title">Seconds</span>
+
+              <div class="figure sec sec-1">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+
+              <div class="figure sec sec-2">
+                <span class="top">0</span>
+                <span class="top-back">
+                  <span>0</span>
+                </span>
+                <span class="bottom">0</span>
+                <span class="bottom-back">
+                  <span>0</span>
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="markdown-body">
+        <p class="full-description">{{{post.description}}}</p>
+      </div>
+    </div>
+
+    <!-- RSVP Button -->
+    {{#if user}}
+    <!-- RSVP Button -->
+    <div class="interaction-section">
+      <button {{#if user}}class="like-btn"{{else}}class="like-btn not-logged-in"{{/if}} data-id="{{post._id}}">
+        {{#if likedByUser}}❤️{{else}}🤍{{/if}} <span class="like-count">{{post.likes.length}}</span>
+      </button>
+
+      <button class="rsvp-button {{#if userAttending}}rsvp-red{{else}}rsvp-green{{/if}}" data-id="{{post._id}}">
+        RSVP <span id="rsvp-status">{{#if userAttending}}❌{{else}}✔️{{/if}}</span>
+      </button>
+
+      <span id="open-attendees-modal" class="view-attendees">Attendees</span>
+    </div>
+
+    <!-- Modal moved outside of the dropdown -->
+    <div id="attendees-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <ul class="user-list">
+          {{#if post.attendees.length}}
+            {{#each post.attendees}}
+              <li class="user-list-item" onclick="window.location.href='/{{this.username}}'">
+                <img src="/profile-picture/{{this._id}}" alt="{{this.username}}'s profile picture" class="user-avatar">
+                <div class="user-info">
+                  <h3>{{this.name}}</h3>
+                  <p>@{{this.username}}</p>
+                </div>
+              </li>
+            {{/each}}
+          {{else}}
+            <!-- Empty list initially; JS will fill it -->
+          {{/if}}
+        </ul>
+        <p class="no-attendees-message" {{#if post.attendees.length}}style="display:none;"{{/if}}>No one has RSVPd yet..</p>
+      </div>
+    </div>
+    {{/if}}
+    <section class="replies-section">
+    <h3>Replies</h3>
+
+    {{#if user}}
+      <form id="reply-form" action="/posts/{{post._id}}/replies" method="POST">
+        <textarea id="reply-textarea" name="text" placeholder="Write a reply..." required></textarea>
+        <button type="submit">Reply</button>
+      </form>
+    {{else}}
+      <p><a href="/login">Log in</a> to reply.</p>
+    {{/if}}
+
+    <div class="replies-list">
+      {{#each post.replies}}
+        <div class="reply">
+          <p><strong>@{{this.user.username}}</strong> {{timeAgo this.createdAt}}</p>
+          <p>{{this.text}}</p>
+        </div>
+      {{/each}}
+    </div>
+  </section>
+</main>
+
+<!-- External scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js'></script>
+
+<script src="/javascripts/countdown.js"></script>
+<script src="/javascripts/updateLike.js"></script>
+<script src="/javascripts/updateRSVP.js"></script>
+<script src="/javascripts/deleteConfirmation.js"></script>
+<script src="/javascripts/kebabMenu.js"></script>
+<script src="/javascripts/attendeesModal.js"></script>
+<script src="/javascripts/reloadPage.js"></script>
+<script>
+  window.CURRENT_USER = {
+    id: "{{user._id}}",
+    name: "{{user.name}}",
+    username: "{{user.username}}"
+  };
+</script>
+<script>
+const textarea = document.getElementById('reply-textarea');
+
+textarea.addEventListener('input', function() {
+  this.style.height = 'auto'; // Reset the height
+  this.style.height = (this.scrollHeight) + 'px'; // Set it to the scrollHeight
+});
+</script>
