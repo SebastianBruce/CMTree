@@ -116,19 +116,19 @@ router.get("/posts/:id", async (req, res) => {
       return res.redirect("/posts");
     }
 
+    // Sort replies by newest first
+    post.replies.sort((a, b) => b.createdAt - a.createdAt);
+
     const isOwner = req.user && post.userId.equals(req.user._id);
     
     const userId = req.user ? req.user._id.toString() : null;
     const likedByUser = userId ? post.likes.map(id => id.toString()).includes(userId) : false;
     const userAttending = userId ? post.attendees.some(att => att._id.toString() === userId) : false;
 
-    // Check the post type and render a specific view
+    // Determine which view to render
     let view = "post-details";
-    if (post.type === 'event') {
-      view = "event-details";
-    } else if (post.type === 'blog') {
-      view = "blog-details";
-    } 
+    if (post.type === 'event') view = "event-details";
+    else if (post.type === 'blog') view = "blog-details";
 
     res.render(view, {
       post,
@@ -414,7 +414,10 @@ router.post("/posts/:id/replies", async (req, res) => {
   }
 
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.id)
+      .populate('userId attendees')
+      .populate('replies.user', 'username profilePicture');
+
     if (!post) {
       req.flash("error_msg", "Post not found.");
       return res.redirect("/posts");

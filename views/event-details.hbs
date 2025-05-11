@@ -229,14 +229,27 @@
         <button type="submit">Reply</button>
       </form>
     {{else}}
-      <p><a href="/login">Log in</a> to reply.</p>
+    <div class="guest-warning">
+      <p>You must
+        <a href="/login">Log in</a> 
+        to reply.</p>
+    </div>
     {{/if}}
 
     <div class="replies-list">
       {{#each post.replies}}
         <div class="reply">
-          <p><strong>@{{this.user.username}}</strong> {{timeAgo this.createdAt}}</p>
-          <p>{{this.text}}</p>
+          <div class="reply-user-info">
+            <a href="/{{this.user.username}}" class="profile-link">
+            <img src="/profile-picture/{{this.user._id}}" alt="{{this.userId.username}}'s profile picture" class="profile-pic">
+            </a>
+            <a href="/{{this.user.username}}" class="profile-link">
+            <p class="username">@{{this.user.username}}</p>
+            </a>
+            <p>-</p>
+            <p>{{timeAgo this.createdAt}}</p>
+          </div>
+          <p>{{this.description}}</p>
         </div>
       {{/each}}
     </div>
@@ -253,6 +266,7 @@
 <script src="/javascripts/deleteConfirmation.js"></script>
 <script src="/javascripts/kebabMenu.js"></script>
 <script src="/javascripts/attendeesModal.js"></script>
+<script src="/javascripts/replyboxAutosize.js"></script>
 <script src="/javascripts/reloadPage.js"></script>
 <script>
   window.CURRENT_USER = {
@@ -260,12 +274,4 @@
     name: "{{user.name}}",
     username: "{{user.username}}"
   };
-</script>
-<script>
-const textarea = document.getElementById('reply-textarea');
-
-textarea.addEventListener('input', function() {
-  this.style.height = 'auto'; // Reset the height
-  this.style.height = (this.scrollHeight) + 'px'; // Set it to the scrollHeight
-});
 </script>

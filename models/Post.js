@@ -14,8 +14,9 @@ const postSchema = new mongoose.Schema({
   replies: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      text: String,
-      createdAt: { type: Date, default: Date.now }
+      description: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now },
+      likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     }
   ]
 });
